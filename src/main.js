@@ -3,6 +3,13 @@ var posterTitle = document.querySelector('.poster-title');
 var posterQuote = document.querySelector('.poster-quote');
 var posterImg = document.querySelector('.poster-img');
 const buttonRandom = document.querySelector('.show-random');
+const showMakePoster = document.querySelector('.poster-form');
+const buttonMakePoster = document.querySelector('.show-form');
+const mainPoster = document.querySelector('.main-poster');
+const buttonShowMain = document.querySelector('.show-main');
+const buttonShowSaved = document.querySelector('.show-saved');
+const savedPosters = document.querySelector('.saved-posters');
+const buttonBackToMain = document.querySelector('.back-to-main');
 // we've provided you with some data to work with 👇
 var images = [
   "./assets/bees.jpg",
@@ -113,23 +120,45 @@ var currentPoster;
 
 // event listeners go here 👇
 document.addEventListener('DOMContentLoaded', randomPoster());
-document.addEventListener('DOMContentLoaded',function() {
-  buttonRandom.onclick = randomPoster;
-});
 
-function alertMe() {
-  alert("hi");
-};
+buttonRandom.addEventListener('click',randomPoster);
+
+buttonMakePoster.addEventListener('click', makePoster);
+
+buttonShowMain.addEventListener('click', showMainPage);
+
+buttonShowSaved.addEventListener('click', showSavedPosters);
+
+buttonBackToMain.addEventListener('click', backToMain);
+
 // functions and event handlers go here 👇
 // (we've provided one for you to get you started)!
-// function getRandomIndex(array) {
-//   return Math.floor(Math.random() * array.length);
-// };
+function getRandomIndex(array) {
+  return Math.floor(Math.random() * array.length);
+};
+
 function randomPoster() {
-  var index = Math.floor(Math.random() * images.length);
-  var index2 = Math.floor(Math.random() * titles.length);
-  var index3 = Math.floor(Math.random() * quotes.length);
-  posterImg.src = images[index];
-  posterTitle.innerHTML = titles[index2];
-  posterQuote.innerHTML = quotes[index3];
+  posterImg.src = images[getRandomIndex(images)];
+  posterTitle.innerHTML = titles[getRandomIndex(titles)];
+  posterQuote.innerHTML = quotes[getRandomIndex(quotes)];
+};
+
+function makePoster() {
+  showMakePoster.classList.remove('hidden');
+  mainPoster.style.display = 'none';
+};
+
+function showMainPage() {
+  mainPoster.style.display = 'block';
+  showMakePoster.classList.add('hidden');
+};
+
+function showSavedPosters() {
+  savedPosters.classList.remove('hidden');
+  mainPoster.style.display = 'none';
+};
+
+function backToMain() {
+  savedPosters.classList.add('hidden');
+  mainPoster.style.display = 'block';
 };
