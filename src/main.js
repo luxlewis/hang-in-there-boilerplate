@@ -2,6 +2,9 @@
 var posterTitle = document.querySelector('.poster-title');
 var posterQuote = document.querySelector('.poster-quote');
 var posterImg = document.querySelector('.poster-img');
+var myPosterImgURL = document.getElementById('poster-image-url');
+var myPosterTitle = document.getElementById('poster-title');
+var myPosterQuote = document.getElementById('poster-quote');
 const buttonRandom = document.querySelector('.show-random');
 const showMakePoster = document.querySelector('.poster-form');
 const buttonMakePoster = document.querySelector('.show-form');
@@ -10,6 +13,9 @@ const buttonShowMain = document.querySelector('.show-main');
 const buttonShowSaved = document.querySelector('.show-saved');
 const savedPosters = document.querySelector('.saved-posters');
 const buttonBackToMain = document.querySelector('.back-to-main');
+const buttonSavePoster = document.querySelector('.save-poster');
+const buttonShowPoster = document.querySelector('.make-poster');
+var makeForm = document.querySelector('form');
 // we've provided you with some data to work with 👇
 var images = [
   "./assets/bees.jpg",
@@ -108,13 +114,16 @@ var quotes = [
   "Each person must live their life as a model for others.",
   "A champion is defined not by their wins but by how they can recover when they fall."
 ];
-// var savedPosters = [
-//   makePoster(
-//     "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
-//     "Optimism",
-//     "Keep a joyful heart!"
-//   )
-// ];
+
+
+
+var mySavedPosters = [
+  makePoster(
+    "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
+    "Optimism",
+    "Keep a joyful heart!"
+  )
+];
 var currentPoster;
 // const posterImg = document.querySelector('.poster-img');
 
@@ -131,6 +140,9 @@ buttonShowSaved.addEventListener('click', showSavedPosters);
 
 buttonBackToMain.addEventListener('click', backToMain);
 
+// buttonSavePoster.addEventListener('click', savePoster);
+
+makeForm.addEventListener('submit', showNewPoster);
 // functions and event handlers go here 👇
 // (we've provided one for you to get you started)!
 function getRandomIndex(array) {
@@ -162,3 +174,28 @@ function backToMain() {
   savedPosters.classList.add('hidden');
   mainPoster.style.display = 'block';
 };
+
+
+function showNewPoster(e) {
+  e.preventDefault();
+  debugger;
+  images.push(myPosterImgURL.value);
+  titles.push(myPosterTitle.value);
+  quotes.push(myPosterQuote.value);
+  posterImg.src = myPosterImgURL.value;
+  posterTitle.innerHTML = myPosterTitle.value;
+  posterQuote.innerHTML = myPosterQuote.value;
+  showMakePoster.classList.add('hidden');
+  mainPoster.style.display = 'block';
+  console.log(images);
+  console.log(titles);
+  console.log(quotes);
+  makeForm.reset();
+};
+
+// function savePoster() {
+//   var myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
+//   debugger;
+//   mySavedPosters.push(this.Poster);
+//   console.log(mySavedPosters);
+// };
