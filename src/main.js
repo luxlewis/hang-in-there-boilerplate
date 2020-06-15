@@ -5,6 +5,7 @@ var posterImg = document.querySelector('.poster-img');
 var myPosterImgURL = document.getElementById('poster-image-url');
 var myPosterTitle = document.getElementById('poster-title');
 var myPosterQuote = document.getElementById('poster-quote');
+var savedPostersGrid = document.querySelector('.saved-posters-grid');
 const buttonRandom = document.querySelector('.show-random');
 const showMakePoster = document.querySelector('.poster-form');
 const buttonMakePoster = document.querySelector('.show-form');
@@ -12,6 +13,7 @@ const mainPoster = document.querySelector('.main-poster');
 const buttonShowMain = document.querySelector('.show-main');
 const buttonShowSaved = document.querySelector('.show-saved');
 const savedPosters = document.querySelector('.saved-posters');
+const miniPoster = document.querySelector('.mini-poster');
 const buttonBackToMain = document.querySelector('.back-to-main');
 const buttonSavePoster = document.querySelector('.save-poster');
 const buttonShowPoster = document.querySelector('.make-poster');
@@ -118,11 +120,11 @@ var quotes = [
 
 
 var mySavedPosters = [
-  makePoster(
-    "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
-    "Optimism",
-    "Keep a joyful heart!"
-  )
+  // makePoster(
+  //   "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
+  //   "Optimism",
+  //   "Keep a joyful heart!"
+  // )
 ];
 var currentPoster;
 // const posterImg = document.querySelector('.poster-img');
@@ -140,7 +142,7 @@ buttonShowSaved.addEventListener('click', showSavedPosters);
 
 buttonBackToMain.addEventListener('click', backToMain);
 
-// buttonSavePoster.addEventListener('click', savePoster);
+buttonSavePoster.addEventListener('click', savePoster);
 
 makeForm.addEventListener('submit', showNewPoster);
 // functions and event handlers go here 👇
@@ -166,9 +168,17 @@ function showMainPage() {
 };
 
 function showSavedPosters() {
+  debugger;
   savedPosters.classList.remove('hidden');
   mainPoster.style.display = 'none';
+  // debugger;
+  // for(let i = 0; i < mySavedPosters.length; i++) {
+  // // document.createElement(image).src = results.
+  //   var results = mySavedPosters.values();
+  //   console.log(results)
+  // }
 };
+
 
 function backToMain() {
   savedPosters.classList.add('hidden');
@@ -193,9 +203,21 @@ function showNewPoster(e) {
   makeForm.reset();
 };
 
-// function savePoster() {
-//   var myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
-//   debugger;
-//   mySavedPosters.push(this.Poster);
-//   console.log(mySavedPosters);
-// };
+function savePoster() {
+  var myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
+  debugger;
+  let newItem = document.createElement('div');
+  newItem.classList.add('mini-poster', 'saved-posters', 'saved-poster-grid');
+  var newImg = document.createElement('img');
+  var newTitle = document.createElement('h2');
+  var newQuote = document.createElement('h4');
+  newQuote.innerHTML = myNewPoster['quote']
+  newTitle.innerHTML = myNewPoster['title'];
+  newImg.src = myNewPoster['imageURL'];
+  newImg.title = myNewPoster['title'];
+  newItem.appendChild(newImg);
+  newItem.appendChild(newTitle);
+  newItem.appendChild(newQuote);
+  savedPostersGrid.appendChild(newItem);
+  mySavedPosters.push(myNewPoster);
+};
