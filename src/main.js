@@ -222,14 +222,26 @@ var myNewPoster;
 function savePoster() {
   debugger;
   myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
-  mySavedImages.push(myNewPoster['imageURL']);
-  localStorage.setItem('images', JSON.stringify(mySavedImages));
-  mySavedTitles.push(myNewPoster['title']);
-  localStorage.setItem('titles', JSON.stringify(mySavedTitles));
-  mySavedQuotes.push(myNewPoster['quote']);
-  localStorage.setItem('quotes', JSON.stringify(mySavedQuotes));
-  mySavedPosters.push(myNewPoster);
-  localStorage.setItem('items', JSON.stringify(mySavedPosters));
+  if (!mySavedImages.includes(myNewPoster['imageURL']))
+    mySavedImages.push(myNewPoster['imageURL']);
+    localStorage.setItem('images', JSON.stringify(mySavedImages));
+  if (!mySavedTitles.includes(myNewPoster['title']))
+    mySavedTitles.push(myNewPoster['title']);
+    localStorage.setItem('titles', JSON.stringify(mySavedTitles));
+  if (!mySavedQuotes.includes(myNewPoster['quote']))
+    mySavedQuotes.push(myNewPoster['quote']);
+    localStorage.setItem('quotes', JSON.stringify(mySavedQuotes));
+  var isIncluded = false;
+  for (var i = 0; i < mySavedPosters.length; i++) {
+    if(mySavedPosters[i]['imageURL'] == myNewPoster['imageURL'] && mySavedPosters[i]['title'] == myNewPoster['title'] && mySavedPosters[i]['quote'] == myNewPoster['quote']) {
+      isIncluded = true;
+      break;
+    }
+  }
+  if (!isIncluded) {
+    mySavedPosters.push(myNewPoster);
+    localStorage.setItem('items', JSON.stringify(mySavedPosters));
+  }
 };
 
 function displaySavedGrid() {
