@@ -5,6 +5,7 @@ var posterImg = document.querySelector('.poster-img');
 var myPosterImgURL = document.getElementById('poster-image-url');
 var myPosterTitle = document.getElementById('poster-title');
 var myPosterQuote = document.getElementById('poster-quote');
+var savedPostersGrid = document.querySelector('.saved-posters-grid');
 const buttonRandom = document.querySelector('.show-random');
 const showMakePoster = document.querySelector('.poster-form');
 const buttonMakePoster = document.querySelector('.show-form');
@@ -12,10 +13,13 @@ const mainPoster = document.querySelector('.main-poster');
 const buttonShowMain = document.querySelector('.show-main');
 const buttonShowSaved = document.querySelector('.show-saved');
 const savedPosters = document.querySelector('.saved-posters');
+const miniPoster = document.querySelector('.mini-poster');
 const buttonBackToMain = document.querySelector('.back-to-main');
 const buttonSavePoster = document.querySelector('.save-poster');
 const buttonShowPoster = document.querySelector('.make-poster');
 var makeForm = document.querySelector('form');
+const body = document.querySelector('body');
+
 // we've provided you with some data to work with 👇
 var images = [
   "./assets/bees.jpg",
@@ -116,19 +120,34 @@ var quotes = [
 ];
 
 
+var mySavedTitles = JSON.parse(localStorage.getItem("titles"));
+if (localStorage.getItem('titles') == null) {
+  localStorage.setItem('titles', JSON.stringify(titles));
+};
 
-var mySavedPosters = [
-  makePoster(
-    "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
-    "Optimism",
-    "Keep a joyful heart!"
-  )
-];
-var currentPoster;
-// const posterImg = document.querySelector('.poster-img');
+var mySavedQuotes = JSON.parse(localStorage.getItem('quotes'));
+if (localStorage.getItem('quotes') == null) {
+  localStorage.setItem('quotes', JSON.stringify(quotes))
+};
+
+var mySavedImages = JSON.parse(localStorage.getItem('images'));
+if (localStorage.getItem('images') == null) {
+  localStorage.setItem('images', JSON.stringify(images));
+};
+
+var mySavedPosters = JSON.parse(localStorage.getItem('items') || "[]");
+
+localStorage.setItem('items', JSON.stringify(mySavedPosters));
+
+  // makePoster(
+  //   "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
+  //   "Optimism",
+  //   "Keep a joyful heart!"
+  // )
 
 // event listeners go here 👇
 document.addEventListener('DOMContentLoaded', randomPoster());
+
 
 buttonRandom.addEventListener('click',randomPoster);
 
@@ -136,11 +155,16 @@ buttonMakePoster.addEventListener('click', makePoster);
 
 buttonShowMain.addEventListener('click', showMainPage);
 
+buttonShowSaved.addEventListener('click', displaySavedGrid);
+
 buttonShowSaved.addEventListener('click', showSavedPosters);
 
 buttonBackToMain.addEventListener('click', backToMain);
 
-// buttonSavePoster.addEventListener('click', savePoster);
+buttonSavePoster.addEventListener('click', savePoster);
+// buttonSavePoster.addEventListener('click', displaySavedGrid);
+
+savedPosters.addEventListener('click', removeSavedItem);
 
 makeForm.addEventListener('submit', showNewPoster);
 // functions and event handlers go here 👇
@@ -150,9 +174,10 @@ function getRandomIndex(array) {
 };
 
 function randomPoster() {
-  posterImg.src = images[getRandomIndex(images)];
-  posterTitle.innerHTML = titles[getRandomIndex(titles)];
-  posterQuote.innerHTML = quotes[getRandomIndex(quotes)];
+  debugger;
+  posterImg.src = mySavedImages[getRandomIndex(mySavedImages)];
+  posterTitle.innerHTML = mySavedTitles[getRandomIndex(mySavedTitles)];
+  posterQuote.innerHTML = mySavedQuotes[getRandomIndex(mySavedQuotes)];
 };
 
 function makePoster() {
@@ -165,10 +190,7 @@ function showMainPage() {
   showMakePoster.classList.add('hidden');
 };
 
-function showSavedPosters() {
-  savedPosters.classList.remove('hidden');
-  mainPoster.style.display = 'none';
-};
+
 
 function backToMain() {
   savedPosters.classList.add('hidden');
@@ -179,23 +201,86 @@ function backToMain() {
 function showNewPoster(e) {
   e.preventDefault();
   debugger;
-  images.push(myPosterImgURL.value);
-  titles.push(myPosterTitle.value);
-  quotes.push(myPosterQuote.value);
   posterImg.src = myPosterImgURL.value;
   posterTitle.innerHTML = myPosterTitle.value;
   posterQuote.innerHTML = myPosterQuote.value;
   showMakePoster.classList.add('hidden');
   mainPoster.style.display = 'block';
-  console.log(images);
-  console.log(titles);
-  console.log(quotes);
   makeForm.reset();
 };
+var myNewPoster;
+function savePoster() {
+  debugger;
+  myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
+  if (!mySavedImages.includes(myNewPoster['imageURL']))
+    mySavedImages.push(myNewPoster['imageURL']);
+    localStorage.setItem('images', JSON.stringify(mySavedImages));
+  if (!mySavedTitles.includes(myNewPoster['title']))
+    mySavedTitles.push(myNewPoster['title']);
+    localStorage.setItem('titles', JSON.stringify(mySavedTitles));
+  if (!mySavedQuotes.includes(myNewPoster['quote']))
+    mySavedQuotes.push(myNewPoster['quote']);
+    localStorage.setItem('quotes', JSON.stringify(mySavedQuotes));
+  var isIncluded = false;
+  for (var i = 0; i < mySavedPosters.length; i++) {
+    if(mySavedPosters[i]['imageURL'] == myNewPoster['imageURL'] && mySavedPosters[i]['title'] == myNewPoster['title'] && mySavedPosters[i]['quote'] == myNewPoster['quote']) {
+      isIncluded = true;
+      break;
+    }
+  }
+  if (!isIncluded) {
+    mySavedPosters.push(myNewPoster);
+    localStorage.setItem('items', JSON.stringify(mySavedPosters));
+  }
+};
 
-// function savePoster() {
-//   var myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
-//   debugger;
-//   mySavedPosters.push(this.Poster);
-//   console.log(mySavedPosters);
-// };
+function displaySavedGrid() {
+  debugger;
+  savedPostersGrid.innerHTML = '';
+  mySavedPosters.forEach(Poster => {
+    let newItem = document.createElement('div');
+    newItem.classList.add('mini-poster', 'saved-posters', 'saved-poster-grid');
+    var newImg = document.createElement('img');
+    var newTitle = document.createElement('h2');
+    var newQuote = document.createElement('h4');
+    newQuote.innerHTML = Poster['quote']
+    newTitle.innerHTML = Poster['title']
+    newImg.src = Poster['imageURL']
+    newItem.appendChild(newImg)
+    newItem.appendChild(newTitle)
+    newItem.appendChild(newQuote)
+    savedPostersGrid.appendChild(newItem)
+  })
+};
+
+function showSavedPosters() {
+  debugger;
+  savedPosters.classList.remove('hidden');
+  mainPoster.style.display = 'none';
+
+};
+
+function removeSavedItem(e) {
+  debugger;
+  console.log(e.target);
+  if (e.target.matches('div')) {
+      var myNewPoster = new Poster(e.target.children[0].src, e.target.children[1].innerHTML, e.target.children[2].innerHTML);
+      console.log(myNewPoster);
+      for (i = 0; i < mySavedPosters.length; i++) {
+        if (myNewPoster.imageURL == mySavedPosters[i].imageURL && myNewPoster.title == mySavedPosters[i].title && myNewPoster.quote == mySavedPosters[i].quote) {
+          console.log(`Found it at ${i}`);
+          let index = i;
+          console.log(index);
+          mySavedPosters.splice(index, 1);
+          localStorage.setItem('items', JSON.stringify(mySavedPosters));
+          break;
+        }
+      }
+      // console.log(e.target.children[0].src)
+      // console.log(e.target.children[1].innerHTML)
+      // console.log(e.target.children[2].innerHTML)
+    e.target.remove(e.target);
+  } else {
+    return;
+  }
+};
