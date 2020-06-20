@@ -164,7 +164,7 @@ buttonBackToMain.addEventListener('click', backToMain);
 buttonSavePoster.addEventListener('click', savePoster);
 // buttonSavePoster.addEventListener('click', displaySavedGrid);
 
-savedPosters.addEventListener('click', removeSavedItem);
+savedPosters.addEventListener('dblclick', removeSavedItem);
 
 makeForm.addEventListener('submit', showNewPoster);
 // functions and event handlers go here 👇
