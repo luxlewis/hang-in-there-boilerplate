@@ -18,7 +18,7 @@ const buttonBackToMain = document.querySelector('.back-to-main');
 const buttonSavePoster = document.querySelector('.save-poster');
 const buttonShowPoster = document.querySelector('.make-poster');
 var makeForm = document.querySelector('form');
-
+const body = document.querySelector('body');
 
 // we've provided you with some data to work with 👇
 var images = [
@@ -119,8 +119,7 @@ var quotes = [
   "A champion is defined not by their wins but by how they can recover when they fall."
 ];
 
-// let mySavedPosters = window.localStorage.getItem('items') ?
-// JSON.parse(localStorage.getItem('items')) : []
+
 var mySavedTitles = JSON.parse(localStorage.getItem("titles"));
 if (localStorage.getItem('titles') == null) {
   localStorage.setItem('titles', JSON.stringify(titles));
@@ -146,14 +145,9 @@ localStorage.setItem('items', JSON.stringify(mySavedPosters));
   //   "Keep a joyful heart!"
   // )
 
-
-// var data = JSON.parse(mySavedPosters);
-
 // event listeners go here 👇
 document.addEventListener('DOMContentLoaded', randomPoster());
-// document.addEventListener('DOMContentLoaded', displaySavedGrid);
 
-// document.addEventListener('DOMContentLoaded', displaySavedGrid());
 
 buttonRandom.addEventListener('click',randomPoster);
 
@@ -169,6 +163,8 @@ buttonBackToMain.addEventListener('click', backToMain);
 
 buttonSavePoster.addEventListener('click', savePoster);
 // buttonSavePoster.addEventListener('click', displaySavedGrid);
+
+savedPosters.addEventListener('click', removeSavedItem);
 
 makeForm.addEventListener('submit', showNewPoster);
 // functions and event handlers go here 👇
@@ -205,12 +201,6 @@ function backToMain() {
 function showNewPoster(e) {
   e.preventDefault();
   debugger;
-  // images.push(myPosterImgURL.value);
-  // localStorage.setItem('images', JSON.stringify(images));
-  // titles.push(myPosterTitle.value);
-  // localStorage.setItem('titles', JSON.stringify(titles));
-  // quotes.push(myPosterQuote.value);
-  // localStorage.setItem('quotes', JSON.stringify(quotes));
   posterImg.src = myPosterImgURL.value;
   posterTitle.innerHTML = myPosterTitle.value;
   posterQuote.innerHTML = myPosterQuote.value;
@@ -256,31 +246,41 @@ function displaySavedGrid() {
     newQuote.innerHTML = Poster['quote']
     newTitle.innerHTML = Poster['title']
     newImg.src = Poster['imageURL']
-    // newImg.title = item['title'];
     newItem.appendChild(newImg)
     newItem.appendChild(newTitle)
     newItem.appendChild(newQuote)
     savedPostersGrid.appendChild(newItem)
-})
-  // var newImg = document.createElement('img');
-  // var newTitle = document.createElement('h2');
-  // var newQuote = document.createElement('h4');
-  // newQuote.innerHTML = data['quote']
-  // newTitle.innerHTML = data['title'];
-  // newImg.src = data['imageURL'];
-  // newImg.title = data['title'];
-
-
+  })
 };
 
 function showSavedPosters() {
   debugger;
   savedPosters.classList.remove('hidden');
   mainPoster.style.display = 'none';
-  // debugger;
-  // for(let i = 0; i < mySavedPosters.length; i++) {
-  // // document.createElement(image).src = results.
-  //   var results = mySavedPosters.values();
-  //   console.log(results)
-  // }
+
+};
+
+function removeSavedItem(e) {
+  debugger;
+  console.log(e.target);
+  if (e.target.matches('div')) {
+      var myNewPoster = new Poster(e.target.children[0].src, e.target.children[1].innerHTML, e.target.children[2].innerHTML);
+      console.log(myNewPoster);
+      for (i = 0; i < mySavedPosters.length; i++) {
+        if (myNewPoster.imageURL == mySavedPosters[i].imageURL && myNewPoster.title == mySavedPosters[i].title && myNewPoster.quote == mySavedPosters[i].quote) {
+          console.log(`Found it at ${i}`);
+          let index = i;
+          console.log(index);
+          mySavedPosters.splice(index, 1);
+          localStorage.setItem('items', JSON.stringify(mySavedPosters));
+          break;
+        }
+      }
+      // console.log(e.target.children[0].src)
+      // console.log(e.target.children[1].innerHTML)
+      // console.log(e.target.children[2].innerHTML)
+    e.target.remove(e.target);
+  } else {
+    return;
+  }
 };
