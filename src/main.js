@@ -174,7 +174,6 @@ function getRandomIndex(array) {
 };
 
 function randomPoster() {
-  debugger;
   posterImg.src = mySavedImages[getRandomIndex(mySavedImages)];
   posterTitle.innerHTML = mySavedTitles[getRandomIndex(mySavedTitles)];
   posterQuote.innerHTML = mySavedQuotes[getRandomIndex(mySavedQuotes)];
@@ -200,7 +199,6 @@ function backToMain() {
 
 function showNewPoster(e) {
   e.preventDefault();
-  debugger;
   posterImg.src = myPosterImgURL.value;
   posterTitle.innerHTML = myPosterTitle.value;
   posterQuote.innerHTML = myPosterQuote.value;
@@ -208,9 +206,11 @@ function showNewPoster(e) {
   mainPoster.style.display = 'block';
   makeForm.reset();
 };
+
 var myNewPoster;
+
+//saves new poster to local storage;
 function savePoster() {
-  debugger;
   myNewPoster = new Poster(posterImg.src, posterTitle.innerHTML, posterQuote.innerHTML);
   if (!mySavedImages.includes(myNewPoster['imageURL']))
     mySavedImages.push(myNewPoster['imageURL']);
@@ -234,8 +234,8 @@ function savePoster() {
   }
 };
 
+//builds saved poster grid
 function displaySavedGrid() {
-  debugger;
   savedPostersGrid.innerHTML = '';
   mySavedPosters.forEach(Poster => {
     let newItem = document.createElement('div');
@@ -254,31 +254,23 @@ function displaySavedGrid() {
 };
 
 function showSavedPosters() {
-  debugger;
   savedPosters.classList.remove('hidden');
   mainPoster.style.display = 'none';
-
 };
 
+//removes saved poster from grid and local storage
 function removeSavedItem(e) {
-  debugger;
-  console.log(e.target);
   if (e.target.matches('div')) {
       var myNewPoster = new Poster(e.target.children[0].src, e.target.children[1].innerHTML, e.target.children[2].innerHTML);
       console.log(myNewPoster);
       for (i = 0; i < mySavedPosters.length; i++) {
         if (myNewPoster.imageURL == mySavedPosters[i].imageURL && myNewPoster.title == mySavedPosters[i].title && myNewPoster.quote == mySavedPosters[i].quote) {
-          console.log(`Found it at ${i}`);
           let index = i;
-          console.log(index);
           mySavedPosters.splice(index, 1);
           localStorage.setItem('items', JSON.stringify(mySavedPosters));
           break;
         }
       }
-      // console.log(e.target.children[0].src)
-      // console.log(e.target.children[1].innerHTML)
-      // console.log(e.target.children[2].innerHTML)
     e.target.remove(e.target);
   } else {
     return;
